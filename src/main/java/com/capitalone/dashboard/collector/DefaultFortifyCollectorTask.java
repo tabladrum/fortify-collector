@@ -1,0 +1,176 @@
+package com.capitalone.dashboard.collector;
+
+import java.io.IOException;
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.TaskScheduler;
+import org.springframework.stereotype.Component;
+
+import com.capitalone.dashboard.model.CodeQuality;
+import com.capitalone.dashboard.model.FortifyCollector;
+import com.capitalone.dashboard.model.FortifyProject;
+import com.capitalone.dashboard.repository.BaseCollectorRepository;
+import com.capitalone.dashboard.repository.CodeQualityRepository;
+import com.capitalone.dashboard.repository.ComponentRepository;
+import com.capitalone.dashboard.repository.FortifyCollectorRepository;
+import com.capitalone.dashboard.repository.FortifyProjectRepository;
+import com.fortify.ws.client.FortifyWebServiceException;
+
+@Component
+public class DefaultFortifyCollectorTask extends
+		CollectorTask<FortifyCollector> {
+	private static final Log LOG = LogFactory
+			.getLog(DefaultFortifyCollectorTask.class);
+	private final FortifyProjectRepository fortifyProjectRepository;
+	private final FortifyCollectorRepository fortifyCollectorRepository;
+	private final DefaultFortifyClient fortifyClient;
+	private final ComponentRepository dbComponentRepository;
+	private final FortifySettings fortifySettings;
+	private CodeQualityRepository codeQualityRepository;
+
+	@Autowired
+	public DefaultFortifyCollectorTask(TaskScheduler taskScheduler,
+			FortifyProjectRepository fortifyProjectRepository,
+			FortifyCollectorRepository fortifyCollectorRepository,
+			CodeQualityRepository codeQualityRepository,
+			FortifySettings fortifySettings,
+			DefaultFortifyClient fortifyClient,
+			ComponentRepository dbComponentRepository) {
+		super(taskScheduler, "Fortify");
+		this.fortifyCollectorRepository = fortifyCollectorRepository;
+		this.fortifyProjectRepository = fortifyProjectRepository;
+		this.codeQualityRepository = codeQualityRepository;
+		this.fortifySettings = fortifySettings;
+		this.fortifyClient = fortifyClient;
+		this.dbComponentRepository = dbComponentRepository;
+	}
+
+
+	@Override
+	public FortifyCollector getCollector() {
+		return FortifyCollector.prototype(fortifySettings.getServer());
+	}
+
+	@Override
+	public String getCron() {
+		return fortifySettings.getCron();
+	}
+
+	@Override
+	public BaseCollectorRepository<FortifyCollector> getCollectorRepository() {
+		// TODO Auto-generated method stub
+		return this.fortifyCollectorRepository;
+	}
+
+	@Override
+	public void collect(FortifyCollector collector) {
+
+		long start = System.currentTimeMillis();
+
+		logBanner(collector.getFortifyServer());
+
+		List<FortifyProject> projects = null;
+		try {
+			projects = fortifyClient.listProjectVersions(
+					collector.getFortifyServer(), fortifySettings.getToken());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (FortifyWebServiceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		int projSize = ((projects != null) ? projects.size() : 0);
+		log("Fetched projects   " + projSize, start, 0);
+
+		addNewProjects(projects, collector);
+
+		refreshData(enabledProjects(collector, collector.getFortifyServer()));
+
+		log("Finished", start, 0);
+
+	}
+
+    private void refreshData(List<FortifyProject> fortifyProjects) {
+        long start = System.currentTimeMillis();
+        int count = 0;
+
+        
+        for (FortifyProject project : fortifyProjects) {
+        	try {
+        	
+            CodeQuality codeQuality = fortifyClient.analyse(fortifySettings.getServer(), fortifySettings.getToken(), project);
+
+            if ((codeQuality != null) && isNewQualityData(project, codeQuality)) {
+                codeQuality.setCollectorItemId(project.getId());
+                codeQualityRepository.save(codeQuality);
+                count++;
+            } } catch (IllegalStateException ise) {
+            	ise.printStackTrace();
+            	LOG.warn("Unable to analyze Fortify Project: " + project.getProjectName() + ". Possibly missing scan report on Fortify Server.");
+            }
+        }
+
+        log("Updated", start, count);
+    }
+    
+    private boolean isNewQualityData(FortifyProject project, CodeQuality codeQuality) {
+        return codeQualityRepository.findByCollectorItemIdAndTimestamp(
+                project.getId(), codeQuality.getTimestamp()) == null;
+    }
+    
+    
+	private List<FortifyProject> enabledProjects(FortifyCollector collector,
+			String instanceUrl) {
+		return fortifyProjectRepository.findEnabledProjects(collector.getId(),
+				instanceUrl);
+	}
+
+	private void addNewProjects(List<FortifyProject> projects,
+			FortifyCollector collector) {
+		long start = System.currentTimeMillis();
+		int count = 0;
+
+		for (FortifyProject project : projects) {
+			if (isNewProject(collector, project)) {
+				project.setCollectorId(collector.getId());
+				project.setEnabled(false);
+				project.setDescription(project.getProjectName());
+				fortifyProjectRepository.save(project);
+				count++;
+			}
+		}
+		log("New projects", start, count);
+	}
+
+	private boolean isNewProject(FortifyCollector collector,
+			FortifyProject project) {
+		return fortifyProjectRepository.findFortifyProject(collector.getId(),
+				project.getInstanceUrl(), project.getProjectId()) == null;
+	}
+
+	private void log(String text, long start, Integer count) {
+		long end = System.currentTimeMillis();
+		String elapsed = ((end - start) / 1000) + "s";
+		String token2 = "";
+		String token3;
+		if (count == null) {
+			token3 = StringUtils.leftPad(elapsed, 30 - text.length());
+		} else {
+			String countStr = count.toString();
+			token2 = StringUtils.leftPad(countStr, 20 - text.length());
+			token3 = StringUtils.leftPad(elapsed, 10);
+		}
+		LOG.info(text + token2 + token3);
+	}
+
+	private void logBanner(String instanceUrl) {
+		LOG.info("------------------------------");
+		LOG.info(instanceUrl);
+		LOG.info("------------------------------");
+	}
+}
