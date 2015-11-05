@@ -1,16 +1,22 @@
 package com.capitalone.dashboard.collector;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Component;
 
 import com.capitalone.dashboard.model.CodeQuality;
+import com.capitalone.dashboard.model.CollectorItem;
+import com.capitalone.dashboard.model.CollectorType;
 import com.capitalone.dashboard.model.FortifyCollector;
 import com.capitalone.dashboard.model.FortifyProject;
 import com.capitalone.dashboard.repository.BaseCollectorRepository;
@@ -73,6 +79,7 @@ public class DefaultFortifyCollectorTask extends
 
 		logBanner(collector.getFortifyServer());
 
+		clean(collector);
 		List<FortifyProject> projects = null;
 		try {
 			projects = fortifyClient.listProjectVersions(
@@ -95,6 +102,41 @@ public class DefaultFortifyCollectorTask extends
 
 	}
 
+	/**
+	 * Clean up unused fortify collector items
+	 *
+	 * @param collector
+	 *            the {@link HudsonCollector}
+	 */
+
+	private void clean(FortifyCollector collector) {
+		Set<ObjectId> uniqueIDs = new HashSet<>();
+		for (com.capitalone.dashboard.model.Component comp : dbComponentRepository
+				.findAll()) {
+			if (comp.getCollectorItems() != null && !comp.getCollectorItems().isEmpty()) {
+				List<CollectorItem> itemList = comp.getCollectorItems().get(
+						CollectorType.StaticSecurityScan);
+				if (itemList != null) {
+					for (CollectorItem ci : itemList) {
+						if (ci != null && ci.getCollectorId().equals(collector.getId())){
+							uniqueIDs.add(ci.getId());
+						}
+					}
+				}
+			}
+		}
+		List<FortifyProject> jobList = new ArrayList<>();
+		Set<ObjectId> udId = new HashSet<>();
+		udId.add(collector.getId());
+		for (FortifyProject job : fortifyProjectRepository.findByCollectorIdIn(udId)) {
+			if (job != null) {
+				job.setEnabled(uniqueIDs.contains(job.getId()));
+				jobList.add(job);
+			}
+		}
+		fortifyProjectRepository.save(jobList);
+	}
+	
     private void refreshData(List<FortifyProject> fortifyProjects) {
         long start = System.currentTimeMillis();
         int count = 0;
