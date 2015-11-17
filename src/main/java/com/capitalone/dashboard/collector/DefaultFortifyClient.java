@@ -18,15 +18,15 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.springframework.stereotype.Component;
 import org.xml.sax.SAXException;
 
-import com.capitalone.dashboard.collector.fortify.fvdl.element.Fvdl;
-import com.capitalone.dashboard.collector.fortify.fvdl.element.Vulnerability;
 import com.capitalone.dashboard.model.CodeQuality;
 import com.capitalone.dashboard.model.CodeQualityMetric;
 import com.capitalone.dashboard.model.CodeQualityMetricStatus;
 import com.capitalone.dashboard.model.CodeQualityType;
 import com.capitalone.dashboard.model.FortifyConstants;
 import com.capitalone.dashboard.model.FortifyProject;
+import com.capitalone.dashboard.model.Fvdl;
 import com.capitalone.dashboard.model.Severity;
+import com.capitalone.dashboard.model.Vulnerability;
 import com.fortify.manager.schema.Project;
 import com.fortify.manager.schema.ProjectHistory;
 import com.fortify.manager.schema.ProjectHistoryList;

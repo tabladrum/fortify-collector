@@ -4,8 +4,10 @@ import java.util.List;
 
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.Query;
+import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 
 import com.capitalone.dashboard.model.FortifyProject;
+import com.capitalone.dashboard.repository.BaseCollectorItemRepository;
 
 
 public interface FortifyProjectRepository extends BaseCollectorItemRepository<FortifyProject> {

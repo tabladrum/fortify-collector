@@ -7,8 +7,13 @@ import org.codehaus.staxmate.in.SMHierarchicCursor;
 import org.codehaus.staxmate.in.SMInputCursor;
 import org.xml.sax.SAXException;
 
-import com.capitalone.dashboard.collector.fortify.fvdl.element.*;
+
+import com.capitalone.dashboard.model.Build;
+import com.capitalone.dashboard.model.Description;
 import com.capitalone.dashboard.model.FortifyUtils;
+import com.capitalone.dashboard.model.Fvdl;
+import com.capitalone.dashboard.model.ReplacementDefinition;
+import com.capitalone.dashboard.model.Vulnerability;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLStreamException;

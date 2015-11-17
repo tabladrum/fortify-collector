@@ -17,17 +17,26 @@
  * License along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02
  */
-package com.capitalone.dashboard.collector.fortify.fvdl.element;
+package com.capitalone.dashboard.model;
 
-public class Build {
-  private final String sourceBasePath;
+public class Description {
+  private String classID;
+  private String descriptionAbstract;
 
-  public Build(String sourceBasePath) {
-    this.sourceBasePath = sourceBasePath;
+  public String getClassID() {
+    return this.classID;
   }
 
-  public String getSourceBasePath() {
-    return this.sourceBasePath;
+  public void setClassID(String classID) {
+    this.classID = classID;
+  }
+
+  public String getAbstract() {
+    return this.descriptionAbstract;
+  }
+
+  public void setAbstract(String descriptionAbstract) {
+    this.descriptionAbstract = descriptionAbstract;
   }
 
 }
