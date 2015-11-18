@@ -1,7 +1,5 @@
 package com.capitalone.dashboard.model;
 
-import com.capitalone.dashboard.model.CollectorItem;
-
 public class FortifyProject extends CollectorItem {
     private static final String INSTANCE_URL = "instanceUrl";
     private static final String PROJECT_NAME = "projectName";

@@ -5,7 +5,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 
 import javax.annotation.CheckForNull;
-
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;

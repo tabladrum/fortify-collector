@@ -1,11 +1,8 @@
 package com.capitalone.dashboard.collector;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
+import com.capitalone.dashboard.model.*;
+import com.capitalone.dashboard.repository.*;
+import com.fortify.ws.client.FortifyWebServiceException;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -14,17 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Component;
 
-import com.capitalone.dashboard.model.CodeQuality;
-import com.capitalone.dashboard.model.CollectorItem;
-import com.capitalone.dashboard.model.CollectorType;
-import com.capitalone.dashboard.model.FortifyCollector;
-import com.capitalone.dashboard.model.FortifyProject;
-import com.capitalone.dashboard.repository.BaseCollectorRepository;
-import com.capitalone.dashboard.repository.CodeQualityRepository;
-import com.capitalone.dashboard.repository.ComponentRepository;
-import com.capitalone.dashboard.repository.FortifyCollectorRepository;
-import com.capitalone.dashboard.repository.FortifyProjectRepository;
-import com.fortify.ws.client.FortifyWebServiceException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Component
 public class DefaultFortifyCollectorTask extends
@@ -106,7 +97,6 @@ public class DefaultFortifyCollectorTask extends
 	 * Clean up unused fortify collector items
 	 *
 	 * @param collector
-	 *            the {@link HudsonCollector}
 	 */
 
 	private void clean(FortifyCollector collector) {
