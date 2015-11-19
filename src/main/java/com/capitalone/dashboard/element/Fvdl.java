@@ -1,4 +1,8 @@
-package com.capitalone.dashboard.model;
+package com.capitalone.dashboard.element;
+
+import com.capitalone.dashboard.element.Description;
+import com.capitalone.dashboard.element.Vulnerability;
+import com.capitalone.dashboard.model.ReplacementDefinition;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -6,11 +10,11 @@ import java.util.Map;
 import java.util.regex.Matcher;
 
 public class Fvdl {
-  private final Build build;
+  private final com.capitalone.dashboard.element.Build build;
   private final Map<String, String> descriptions = new HashMap<String, String>();
   private final Collection<Vulnerability> vulnerabilities;
 
-  public Fvdl(Build build, Collection<Description> descriptions, Collection<Vulnerability> vulnerabilities) {
+  public Fvdl(com.capitalone.dashboard.element.Build build, Collection<Description> descriptions, Collection<Vulnerability> vulnerabilities) {
     this.build = build;
     for (Description description : descriptions) {
       this.descriptions.put(description.getClassID(), description.getAbstract());
@@ -18,7 +22,7 @@ public class Fvdl {
     this.vulnerabilities = vulnerabilities;
   }
 
-  public Build getBuild() {
+  public com.capitalone.dashboard.element.Build getBuild() {
     return this.build;
   }
 

@@ -1,4 +1,4 @@
-package com.capitalone.dashboard.model;
+package com.capitalone.dashboard.element;
 
 public class Severity {
 	public static final String BLOCKER = "blocker";

@@ -1,6 +1,8 @@
 
 package com.capitalone.dashboard.model;
 
+import com.capitalone.dashboard.element.Reference;
+
 import java.util.ArrayList;
 import java.util.Collection;
 

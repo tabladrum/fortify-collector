@@ -1,6 +1,7 @@
 
 package com.capitalone.dashboard.model;
 
+import com.capitalone.dashboard.element.Severity;
 import org.codehaus.staxmate.SMInputFactory;
 
 import javax.xml.stream.FactoryConfigurationError;

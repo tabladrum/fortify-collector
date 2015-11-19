@@ -1,5 +1,8 @@
 
-package com.capitalone.dashboard.model;
+package com.capitalone.dashboard.element;
+
+import com.capitalone.dashboard.model.FortifyDescription;
+import com.capitalone.dashboard.model.FortifyRule;
 
 import java.util.ArrayList;
 import java.util.Collection;

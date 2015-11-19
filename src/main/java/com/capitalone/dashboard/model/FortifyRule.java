@@ -1,6 +1,7 @@
 
 package com.capitalone.dashboard.model;
 
+import com.capitalone.dashboard.element.FormatVersion;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 

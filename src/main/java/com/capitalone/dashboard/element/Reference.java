@@ -1,5 +1,5 @@
 
-package com.capitalone.dashboard.model;
+package com.capitalone.dashboard.element;
 
 public class Reference {
   private String title;

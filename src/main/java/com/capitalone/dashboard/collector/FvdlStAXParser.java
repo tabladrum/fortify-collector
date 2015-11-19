@@ -8,12 +8,12 @@ import org.codehaus.staxmate.in.SMInputCursor;
 import org.xml.sax.SAXException;
 
 
-import com.capitalone.dashboard.model.Build;
-import com.capitalone.dashboard.model.Description;
+import com.capitalone.dashboard.element.Build;
+import com.capitalone.dashboard.element.Description;
 import com.capitalone.dashboard.model.FortifyUtils;
-import com.capitalone.dashboard.model.Fvdl;
+import com.capitalone.dashboard.element.Fvdl;
 import com.capitalone.dashboard.model.ReplacementDefinition;
-import com.capitalone.dashboard.model.Vulnerability;
+import com.capitalone.dashboard.element.Vulnerability;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLStreamException;
