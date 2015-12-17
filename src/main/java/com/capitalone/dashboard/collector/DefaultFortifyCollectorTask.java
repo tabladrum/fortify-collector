@@ -1,9 +1,16 @@
 package com.capitalone.dashboard.collector;
 
-import com.capitalone.dashboard.model.*;
-import com.capitalone.dashboard.repository.*;
+import com.capitalone.dashboard.model.CodeQuality;
+import com.capitalone.dashboard.model.CollectorItem;
+import com.capitalone.dashboard.model.CollectorType;
+import com.capitalone.dashboard.model.FortifyCollector;
+import com.capitalone.dashboard.model.FortifyProject;
+import com.capitalone.dashboard.repository.BaseCollectorRepository;
+import com.capitalone.dashboard.repository.CodeQualityRepository;
+import com.capitalone.dashboard.repository.ComponentRepository;
+import com.capitalone.dashboard.repository.FortifyCollectorRepository;
+import com.capitalone.dashboard.repository.FortifyProjectRepository;
 import com.fortify.ws.client.FortifyWebServiceException;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.bson.types.ObjectId;
@@ -185,24 +192,4 @@ public class DefaultFortifyCollectorTask extends
 				project.getInstanceUrl(), project.getProjectId()) == null;
 	}
 
-	private void log(String text, long start, Integer count) {
-		long end = System.currentTimeMillis();
-		String elapsed = ((end - start) / 1000) + "s";
-		String token2 = "";
-		String token3;
-		if (count == null) {
-			token3 = StringUtils.leftPad(elapsed, 30 - text.length());
-		} else {
-			String countStr = count.toString();
-			token2 = StringUtils.leftPad(countStr, 20 - text.length());
-			token3 = StringUtils.leftPad(elapsed, 10);
-		}
-		LOG.info(text + token2 + token3);
-	}
-
-	private void logBanner(String instanceUrl) {
-		LOG.info("------------------------------");
-		LOG.info(instanceUrl);
-		LOG.info("------------------------------");
-	}
 }

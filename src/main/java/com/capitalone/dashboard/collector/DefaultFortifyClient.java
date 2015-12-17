@@ -1,5 +1,29 @@
 package com.capitalone.dashboard.collector;
 
+import com.capitalone.dashboard.element.Fvdl;
+import com.capitalone.dashboard.element.Severity;
+import com.capitalone.dashboard.element.Vulnerability;
+import com.capitalone.dashboard.model.CodeQuality;
+import com.capitalone.dashboard.model.CodeQualityMetric;
+import com.capitalone.dashboard.model.CodeQualityMetricStatus;
+import com.capitalone.dashboard.model.CodeQualityType;
+import com.capitalone.dashboard.model.FortifyConstants;
+import com.capitalone.dashboard.model.FortifyProject;
+import com.fortify.manager.schema.Project;
+import com.fortify.manager.schema.ProjectIdentifier;
+import com.fortify.manager.schema.ProjectVersionLite;
+import com.fortify.manager.schema.Status;
+import com.fortify.ws.client.FPRTransferClient;
+import com.fortify.ws.client.FortifyWebServiceException;
+import com.fortify.ws.client.ProjectClient;
+import com.fortify.ws.client.ProjectVersionClient;
+import com.fortify.ws.core.WSAuthenticationProvider;
+import com.fortify.ws.core.util.PasswordAuthenticationProvider;
+import com.fortify.ws.core.util.TokenAuthenticationProvider;
+import org.springframework.stereotype.Component;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -12,32 +36,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.zip.ZipFile;
-
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.springframework.stereotype.Component;
-import org.xml.sax.SAXException;
-
-import com.capitalone.dashboard.model.CodeQuality;
-import com.capitalone.dashboard.model.CodeQualityMetric;
-import com.capitalone.dashboard.model.CodeQualityMetricStatus;
-import com.capitalone.dashboard.model.CodeQualityType;
-import com.capitalone.dashboard.model.FortifyConstants;
-import com.capitalone.dashboard.model.FortifyProject;
-import com.capitalone.dashboard.element.Fvdl;
-import com.capitalone.dashboard.element.Severity;
-import com.capitalone.dashboard.element.Vulnerability;
-import com.fortify.manager.schema.Project;
-import com.fortify.manager.schema.ProjectIdentifier;
-import com.fortify.manager.schema.ProjectVersionLite;
-import com.fortify.manager.schema.Status;
-import com.fortify.ws.client.FPRTransferClient;
-import com.fortify.ws.client.FortifyWebServiceException;
-import com.fortify.ws.client.ProjectClient;
-import com.fortify.ws.client.ProjectVersionClient;
-import com.fortify.ws.core.WSAuthenticationProvider;
-import com.fortify.ws.core.util.PasswordAuthenticationProvider;
-import com.fortify.ws.core.util.TokenAuthenticationProvider;
 
 @Component
 public class DefaultFortifyClient {
@@ -197,7 +195,6 @@ public class DefaultFortifyClient {
 					} else {
 						group.put(sev, Integer.valueOf(1));
 					}
-					System.out.println(vul.toString());
 				}
 
 				Set<String> keys = group.keySet();
