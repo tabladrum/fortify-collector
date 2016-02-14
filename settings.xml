@@ -17,7 +17,7 @@
         <mirror>
             <id>anonymous</id>
             <mirrorOf>*</mirrorOf>
-            <url>https://nexus.kdc.capitalone.com/nexus/content/groups/CI_Snapshots/</url>
+            <url>https://nexus.kdc.capitalone.com/nexus/content/groups/EVAL/</url>
         </mirror>
     </mirrors>
 
