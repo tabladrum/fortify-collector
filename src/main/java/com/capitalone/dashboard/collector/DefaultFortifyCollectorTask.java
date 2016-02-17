@@ -185,7 +185,7 @@ public class DefaultFortifyCollectorTask extends
 		}
 		log("New projects", start, count);
 	}
-//
+// Another change
 	private boolean isNewProject(FortifyCollector collector,
 			FortifyProject project) {
 		return fortifyProjectRepository.findFortifyProject(collector.getId(),
