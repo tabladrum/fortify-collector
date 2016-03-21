@@ -6,8 +6,8 @@ Fortify Collector for Hygieia
 
 Sample Propertie:
 
-
-dbname=dashboarddb
+<code>
+dbname=dashboardd
 dbhost=localhost
 dbusername=
 dbpassword=
@@ -16,3 +16,4 @@ logging.file=./logs/fortify-collector.log
 fortify.cron=1 * * * * *
 fortify.token=<token generated in Fortify>
 fortify.server=http://myfortify.com/ssc
+<code>
