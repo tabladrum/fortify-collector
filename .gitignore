@@ -1,1 +1,4 @@
 /target/
+/.idea/
+/logs/
+/.apt_generated/
